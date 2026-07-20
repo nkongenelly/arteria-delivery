@@ -149,7 +149,6 @@ class DDSProject:
         self._base_cmd = [
                 'dds',
                 '--token-path', token_path,
-                '--log-file', dds_service.dds_conf["log_path"],
                 '--no-prompt',
                 ]
 
@@ -220,7 +219,8 @@ class DDSProject:
             'project', 'create',
             '--title', ngi_project_name.replace('-', ''),
             '--description', '"{}"'.format(project_metadata['description']),
-            '-pi',  project_metadata['pi']
+            '-pi',  project_metadata['pi'],
+            '--log-file', dds_service.dds_conf["log_path"]
             ]
 
         cmd += [
@@ -254,6 +254,7 @@ class DDSProject:
         except AttributeError:
             cmd = self._base_cmd[:]
             cmd += [
+                    '--log-file', self.dds_service.dds_conf["log_path"],
                     'ls',
                     '--json',
                     ]
@@ -364,6 +365,7 @@ class DDSProject:
         cmd += [
                 'project', 'status', 'release',
                 '--project', self.project_id,
+                '--log-file', self.dds_service.dds_conf["log_path"],
                 ]
 
         if deadline:

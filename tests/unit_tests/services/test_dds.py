@@ -116,7 +116,6 @@ class TestDDSService(AsyncTestCase):
                     call([
                         'dds',
                         '--token-path', self.token_file.name,
-                        '--log-file', '/foo/bar/log',
                         '--no-prompt',
                         'data', 'put',
                         '--mount-dir', '/foo/bar/staging_dir',
@@ -127,10 +126,10 @@ class TestDDSService(AsyncTestCase):
                     call([
                         'dds',
                         '--token-path', self.token_file.name,
-                        '--log-file', '/foo/bar/log',
                         '--no-prompt',
                         'project', 'status', 'release',
                         '--project', project_id,
+                        '--log-file', '/foo/bar/log',
                         '--deadline', deadline,
                         ]),
                     ])
@@ -180,7 +179,6 @@ class TestDDSService(AsyncTestCase):
                 self.mock_dds_runner.run.assert_called_once_with([
                         'dds',
                         '--token-path', self.token_file.name,
-                        '--log-file', '/foo/bar/log',
                         '--no-prompt',
                         'data', 'put',
                         '--mount-dir', '/foo/bar/staging_dir',
@@ -323,12 +321,12 @@ project"""
             self.mock_dds_runner.run.assert_called_with([
                 'dds',
                 '--token-path', self.token_file.name,
-                '--log-file', '/foo/bar/log',
                 '--no-prompt',
                 'project', 'create',
                 '--title', project_name.replace('-', ''),
                 '--description', f'"{project_metadata["description"]}"',
                 '-pi', project_metadata['pi'],
+                '--log-file', '/foo/bar/log',
                 '--owner', project_metadata['owners'][0],
                 '--researcher', project_metadata['researchers'][0],
                 '--researcher', project_metadata['researchers'][1],
@@ -352,10 +350,10 @@ project"""
         self.mock_dds_runner.run.assert_called_with([
             'dds',
             '--token-path', self.token_file.name,
-            '--log-file', '/foo/bar/log',
             '--no-prompt',
             'project', 'status', 'release',
             '--project', project_id,
+            '--log-file', '/foo/bar/log',
             '--deadline', deadline,
             ])
 
@@ -377,10 +375,10 @@ project"""
         self.mock_dds_runner.run.assert_called_with([
             'dds',
             '--token-path', self.token_file.name,
-            '--log-file', '/foo/bar/log',
             '--no-prompt',
             'project', 'status', 'release',
             '--project', project_id,
+            '--log-file', '/foo/bar/log',
             '--deadline', deadline,
             '--no-mail',
             ])
