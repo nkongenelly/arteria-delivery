@@ -219,8 +219,7 @@ class DDSProject:
             'project', 'create',
             '--title', ngi_project_name.replace('-', ''),
             '--description', '"{}"'.format(project_metadata['description']),
-            '-pi',  project_metadata['pi'],
-            '--log-file', dds_service.dds_conf["log_path"]
+            '-pi',  project_metadata['pi']
             ]
 
         cmd += [
@@ -236,7 +235,7 @@ class DDSProject:
             ]
 
         stdout = yield self._run(cmd)
-        self.project_id = cls._parse_dds_project_id(stdout)
+        self.project_id = cls._parse_dds_project_id(' '.join(cmd), stdout)
 
         self._ngi_project_name = ngi_project_name
 
@@ -254,7 +253,6 @@ class DDSProject:
         except AttributeError:
             cmd = self._base_cmd[:]
             cmd += [
-                    '--log-file', self.dds_service.dds_conf["log_path"],
                     'ls',
                     '--json',
                     ]
@@ -365,7 +363,6 @@ class DDSProject:
         cmd += [
                 'project', 'status', 'release',
                 '--project', self.project_id,
-                '--log-file', self.dds_service.dds_conf["log_path"],
                 ]
 
         if deadline:
@@ -395,7 +392,7 @@ class DDSProject:
 
         if execution_result.status_code != 0:
             error_msg = (
-                f"Failed to run DDS command: {execution_result.stderr}."
+                f"Failed to run DDS command '{cmd}'. The error was: {execution_result.stderr}."
                 f" DDS returned status code: {execution_result.status_code}")
             log.error(error_msg)
             raise RuntimeError(error_msg)
@@ -471,11 +468,11 @@ class DDSProject:
             session.commit()
 
     @staticmethod
-    def _parse_dds_project_id(dds_output):
+    def _parse_dds_project_id(cmd, dds_output):
         """
         Parse dds project id from the output of "dds project create".
         """
-        log.debug('DDS output was: {}'.format(dds_output))
+        log.debug(f"DDS output for command '{cmd}':\n{dds_output}")
         pattern = re.compile(r'Project created with id: (snpseq\d+)')
         hits = pattern.search(dds_output)
         if hits:

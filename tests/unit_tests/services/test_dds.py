@@ -129,7 +129,6 @@ class TestDDSService(AsyncTestCase):
                         '--no-prompt',
                         'project', 'status', 'release',
                         '--project', project_id,
-                        '--log-file', '/foo/bar/log',
                         '--deadline', deadline,
                         ]),
                     ])
@@ -286,6 +285,7 @@ class TestDDSService(AsyncTestCase):
                 DeliveryStatus.delivery_skipped)
 
     def test_parse_dds_project_id(self):
+        cmd = "dds --version"
         dds_output = """Current user: bio
 Project created with id: snpseq00003
 User forskare was associated with Project snpseq00003 as Owner=True. An e-mail notification has not been sent.
@@ -293,7 +293,7 @@ Invitation sent to email@adress.com. The user should have a valid account to be 
 project"""
 
         self.assertEqual(
-                DDSProject._parse_dds_project_id(dds_output),
+                DDSProject._parse_dds_project_id(cmd, dds_output),
                 "snpseq00003")
 
     @gen_test
@@ -326,7 +326,6 @@ project"""
                 '--title', project_name.replace('-', ''),
                 '--description', f'"{project_metadata["description"]}"',
                 '-pi', project_metadata['pi'],
-                '--log-file', '/foo/bar/log',
                 '--owner', project_metadata['owners'][0],
                 '--researcher', project_metadata['researchers'][0],
                 '--researcher', project_metadata['researchers'][1],
@@ -353,7 +352,6 @@ project"""
             '--no-prompt',
             'project', 'status', 'release',
             '--project', project_id,
-            '--log-file', '/foo/bar/log',
             '--deadline', deadline,
             ])
 
@@ -378,7 +376,6 @@ project"""
             '--no-prompt',
             'project', 'status', 'release',
             '--project', project_id,
-            '--log-file', '/foo/bar/log',
             '--deadline', deadline,
             '--no-mail',
             ])
