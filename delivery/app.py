@@ -167,14 +167,13 @@ def compose_application(config):
     delivery_repo = DatabaseBasedDeliveriesRepository(
             session_factory=session_factory)
 
-    dds_conf = config['dds_conf']
+    
     dds_service = DDSService(
             external_program_service=external_program_service,
             staging_service=staging_service,
             staging_dir=staging_dir,
             delivery_repo=delivery_repo,
-            session_factory=session_factory,
-            dds_conf=dds_conf)
+            session_factory=session_factory)
 
     delivery_sources_repo = DatabaseBasedDeliverySourcesRepository(
             session_factory=session_factory)

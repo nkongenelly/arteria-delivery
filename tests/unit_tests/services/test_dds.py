@@ -48,16 +48,12 @@ class TestDDSService(AsyncTestCase):
         self.mock_delivery_repo.get_delivery_order_by_id.return_value = self.delivery_order
 
         self.mock_session_factory = MagicMock()
-        self.mock_dds_config = {
-                'log_path': '/foo/bar/log',
-                }
         self.dds_service = DDSService(
                 external_program_service=ExternalProgramService(),
                 staging_service=self.mock_staging_service,
                 staging_dir='/foo/bar/staging_dir',
                 delivery_repo=self.mock_delivery_repo,
-                session_factory=self.mock_session_factory,
-                dds_conf=self.mock_dds_config,
+                session_factory=self.mock_session_factory
                 )
 
         # Inject separate external runner instances for the tests, since they
@@ -285,12 +281,14 @@ class TestDDSService(AsyncTestCase):
                 DeliveryStatus.delivery_skipped)
 
     def test_parse_dds_project_id(self):
-        cmd = "dds --version"
-        dds_output = """Current user: bio
-Project created with id: snpseq00003
-User forskare was associated with Project snpseq00003 as Owner=True. An e-mail notification has not been sent.
-Invitation sent to email@adress.com. The user should have a valid account to be added to a
-project"""
+        cmd = 'dds project create -t "foo" -d "bar" -pi "email@adress.com" ' \
+                '--owner "email@adress.com"'
+        dds_output = """
+                Current user: bio
+                Project created with id: snpseq00003
+                User forskare was associated with Project snpseq00003 as Owner=True. An e-mail notification has not been sent.
+                Invitation sent to email@adress.com. The user should have a valid account to be added to a
+                project"""
 
         self.assertEqual(
                 DDSProject._parse_dds_project_id(cmd, dds_output),
